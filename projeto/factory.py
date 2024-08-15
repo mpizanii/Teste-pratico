@@ -1,8 +1,5 @@
 from abc import ABC,abstractmethod
 import google.generativeai as genai
-import PIL.Image
-from tkinter import Tk
-from tkinter.filedialog import askopenfilename
 import openai
 import openai.error
 
@@ -39,7 +36,7 @@ class ConexaoGPT(ConexaoLLM):
                     break
                 messages.append({"role": "user", "content": prompt})
             except openai.error.AuthenticationError:
-                print("[ERRO]: Verifique sua chave de API e tente novamente.   ")
+                print("[ERRO]: Verifique sua chave de API e tente novamente.")
                 break
             except openai.error.RateLimitError:
                 print("[ERRO]: Você excedeu sua cota máxima de uso. Verifique sua cota em https://platform.openai.com/account/usage.")
@@ -50,36 +47,19 @@ class ConexaoGPT(ConexaoLLM):
 
 class ConexaoGemini(ConexaoLLM):
     def conexao(self) -> str:
-        API_KEY = 'chave' #tirei a chave por uma questão de segurança
+        API_KEY = 'AIzaSyDkG7n0T6oal2EKmIM3h_LkKQbklpbYyBs' 
         genai.configure(api_key=API_KEY)
         while True:
-            escolha = input('Digite "img" para carregar uma imagem ou "msg" para questionar algo ao Gemini (Digite "fim" para sair):') #input do usuario
-            if escolha == "fim":
-                print("Encerrando conexão com Gemini...")
-                break
             try:
-                if escolha == "img":
-                    Tk().withdraw()
-                    caminho_imagem = askopenfilename(title="Selecione uma imagem", 
-                                                    filetypes=[("Imagens", "*.jpg*.jpeg *.png *.bmp *.gif")])
-                    if caminho_imagem:
-                        img = PIL.Image.open(caminho_imagem) #abre o explorador de arquivo para o usuario selecionar a imagem
-                        model = genai.GenerativeModel('gemini-1.5-flash')
-                        prompt_imagem = input(
-                            "Explique para o Gemini o que gostaria que ele fizesse com a imagem:")
-                        response = model.generate_content([prompt_imagem, img]) 
-                        print(response.text)
-                    else:
-                        print("Nenhuma imagem selecionada.") #caso o usuario cancele a operação
-                elif escolha == "msg":
-                    model = genai.GenerativeModel("gemini-pro")
-                    prompt = input("Digite a mensagem:") #pergunta do usuario
-                    response = model.generate_content(prompt)
-                    print(response.text)
-                else:
-                    print("Opção inválida, tente novamente.") #caso o usuario tente escolher algo que nao seja img ou msg
+                model = genai.GenerativeModel("gemini-pro")
+                prompt = input('Digite a mensagem que deseja que o gemini responda (Digite "fim" para sair):')
+                if prompt.lower() == "fim":
+                    break
+                response = model.generate_content(prompt)
+                print(response.text)
             except Exception as e:
                 print(f"[ERRO]: Ocorreu um erro inesperado: {e}")
+                break
 
 class FactoryConexao: #abre a classe factory
     @staticmethod
@@ -90,7 +70,7 @@ class FactoryConexao: #abre a classe factory
             return ConexaoGemini() #chama o método gemini
         else:
             raise ValueError("Modelo não suportado!") #caso o usuario tente escolher outra IA, que não esteja presente
-
+        
 
         
         
