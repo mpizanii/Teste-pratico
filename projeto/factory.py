@@ -50,7 +50,7 @@ class ConexaoGPT(ConexaoLLM):
 
 class ConexaoGemini(ConexaoLLM):
     def conexao(self) -> str:
-        API_KEY = 'AIzaSyDkG7n0T6oal2EKmIM3h_LkKQbklpbYyBs'
+        API_KEY = 'chave'
         genai.configure(api_key=API_KEY)
         while True:
             escolha = input('Digite "img" para carregar uma imagem ou "msg" para questionar algo ao Gemini (Digite "fim" para sair):')
