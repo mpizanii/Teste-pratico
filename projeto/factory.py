@@ -39,7 +39,7 @@ class ConexaoGPT(ConexaoLLM):
                     break
                 messages.append({"role": "user", "content": prompt})
             except openai.error.AuthenticationError:
-                print("[ERRO]: Verifique sua chave de API e tente novamente.")
+                print("[ERRO]: Verifique sua chave de API e tente novamente.   ")
                 break
             except openai.error.RateLimitError:
                 print("[ERRO]: Você excedeu sua cota máxima de uso. Verifique sua cota em https://platform.openai.com/account/usage.")
@@ -50,10 +50,10 @@ class ConexaoGPT(ConexaoLLM):
 
 class ConexaoGemini(ConexaoLLM):
     def conexao(self) -> str:
-        API_KEY = 'chave'
+        API_KEY = 'chave' #tirei a chave por uma questão de segurança
         genai.configure(api_key=API_KEY)
         while True:
-            escolha = input('Digite "img" para carregar uma imagem ou "msg" para questionar algo ao Gemini (Digite "fim" para sair):')
+            escolha = input('Digite "img" para carregar uma imagem ou "msg" para questionar algo ao Gemini (Digite "fim" para sair):') #input do usuario
             if escolha == "fim":
                 print("Encerrando conexão com Gemini...")
                 break
@@ -63,54 +63,36 @@ class ConexaoGemini(ConexaoLLM):
                     caminho_imagem = askopenfilename(title="Selecione uma imagem", 
                                                     filetypes=[("Imagens", "*.jpg*.jpeg *.png *.bmp *.gif")])
                     if caminho_imagem:
-                        img = PIL.Image.open(caminho_imagem)
+                        img = PIL.Image.open(caminho_imagem) #abre o explorador de arquivo para o usuario selecionar a imagem
                         model = genai.GenerativeModel('gemini-1.5-flash')
                         prompt_imagem = input(
                             "Explique para o Gemini o que gostaria que ele fizesse com a imagem:")
-                        response = model.generate_content([prompt_imagem, img])
+                        response = model.generate_content([prompt_imagem, img]) 
                         print(response.text)
                     else:
-                        print("Nenhuma imagem selecionada.")
+                        print("Nenhuma imagem selecionada.") #caso o usuario cancele a operação
                 elif escolha == "msg":
                     model = genai.GenerativeModel("gemini-pro")
-                    prompt = input("Digite a mensagem:")
+                    prompt = input("Digite a mensagem:") #pergunta do usuario
                     response = model.generate_content(prompt)
                     print(response.text)
                 else:
-                    print("Opção inválida, tente novamente.")
+                    print("Opção inválida, tente novamente.") #caso o usuario tente escolher algo que nao seja img ou msg
             except Exception as e:
                 print(f"[ERRO]: Ocorreu um erro inesperado: {e}")
 
-class FactoryConexao:
+class FactoryConexao: #abre a classe factory
     @staticmethod
     def criar_conexao(model_name: str) -> ConexaoLLM:
         if model_name == "gpt-3.5-turbo":
-            return ConexaoGPT()
+            return ConexaoGPT() #chama o método gpt
         elif model_name == "gemini-1.5-flash":
-            return ConexaoGemini()
+            return ConexaoGemini() #chama o método gemini
         else:
-            raise ValueError("Modelo não suportado!")
+            raise ValueError("Modelo não suportado!") #caso o usuario tente escolher outra IA, que não esteja presente
 
-def main():  
-    while True:      
-        print('Digite "fim" para sair')
-        escolha1 = input('Digite qual IA deseja usar ("gpt ou gemini"): ')
-        try:
-            if escolha1.lower() == "gpt":
-                conexao = FactoryConexao.criar_conexao("gpt-3.5-turbo")
-                conexao.conexao() 
-            elif escolha1.lower() == "gemini":
-                conexao = FactoryConexao.criar_conexao("gemini-1.5-flash")
-                conexao.conexao()
-            elif escolha1.lower() == "fim":
-                print("Encerrando conexão...")
-                break
-            else:
-                print("Modelo não suportado!")
-        except ValueError as e:
-            print(f"[ERRO]: {e}")
+
         
-main()
         
 
     
