@@ -13,9 +13,9 @@ class ConexaoGPT(ConexaoLLM):
     def conexao(self, prompt: str) -> str:
         chave = gpt_key
         openai.api_key = chave 
-        messages = [  # Criando uma memória das últimas mensagens
-            {"role": "system", "content": "Você é um ótimo assistente."},  # Define o comportamento do modelo, no caso, educado
-            {"role": "user", "content": prompt}  # Adiciona a mensagem solicitada pelo usuário na memória da IA
+        messages = [  
+            {"role": "system", "content": "Você é um ótimo assistente."},  
+            {"role": "user", "content": prompt}  
         ]
         
         try:
@@ -27,7 +27,7 @@ class ConexaoGPT(ConexaoLLM):
                 n=1,
             )
             resposta = response["choices"][0]["message"]["content"]
-            messages.append({"role": "assistant", "content": resposta})  # Adiciona a resposta à lista de memórias da IA
+            messages.append({"role": "assistant", "content": resposta}) 
             return resposta
         except openai.error.AuthenticationError:
             return "[ERRO]: Verifique sua chave de API e tente novamente."
@@ -43,8 +43,8 @@ class ConexaoGemini(ConexaoLLM):
         genai.configure(api_key=API_KEY)
         try:
             model = genai.GenerativeModel("gemini-pro")
-            response = model.generate_content(prompt) #Cria uma variavel para a reposta do gemini
-            return response.text #Retorna a resposta do gemini
+            response = model.generate_content(prompt) 
+            return response.text 
         except Exception as e:
             print(f"[ERRO]: Ocorreu um erro inesperado: {e}")
 
@@ -52,8 +52,8 @@ class FactoryConexao:
     @staticmethod
     def criar_conexoes() -> dict:
         conexoes = {
-            "gpt": ConexaoGPT(),  #Cria a conexão com o GPT
-            "gemini": ConexaoGemini()  #Cria a conexão com o gemini
+            "gpt": ConexaoGPT(),  
+            "gemini": ConexaoGemini() 
         }
         return conexoes
 

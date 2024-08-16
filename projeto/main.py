@@ -7,8 +7,8 @@ def extrair_palavras_chave(prompt: str) -> set:
     return set(prompt.lower().split())
 
 def main():
-    invoker = Invoker()  # Instancia o Invoker
-    conexoes = FactoryConexao.criar_conexoes()  # Cria conexões para ambos os modelos
+    invoker = Invoker() 
+    conexoes = FactoryConexao.criar_conexoes()  
 
     # Cria o Subject e o Observer
     avaliacao_subject = Subject()
@@ -22,17 +22,17 @@ def main():
             print("Encerrando conexão...")
             break
 
-        # Envia a mesma mensagem para ambos os modelos
+        
         resposta_gpt = conexoes["gpt"].conexao(prompt)
         resposta_gemini = conexoes["gemini"].conexao(prompt)
 
-        # Imprime as respostas dos modelos
+        
         print("\nResposta do GPT:")
         print(resposta_gpt)
         print("\nResposta do Gemini:")
         print(resposta_gemini)
 
-        # Solicita ao usuário qual critério de avaliação usar
+        
         escolha_avalicao = input('Digite "clareza" para avaliar clareza ou "tamanho" para avaliar tamanho: ')
         
         if escolha_avalicao.lower() == "clareza":
@@ -48,7 +48,7 @@ def main():
 
         resultado_avaliacao = avaliacao.avaliar(resposta_gpt, resposta_gemini)
 
-        # Notifica o Observer sobre o resultado da avaliação
+        
         avaliacao_subject.notify_observers(resultado_avaliacao)
 
         print(f"\nAvaliação ({criterio}): {resultado_avaliacao}")
