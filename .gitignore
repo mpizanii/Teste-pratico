@@ -1,0 +1,11 @@
+env/
+venv/
+.env
+__pycache__/
+*.pyc
+*.log
+.vscode/
+.idea/
+*.sqlite3
+.DS_Store  # macOS
+Thumbs.db  # Windows
