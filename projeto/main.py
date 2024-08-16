@@ -7,10 +7,8 @@ def extrair_palavras_chave(prompt: str) -> set:
     return set(prompt.lower().split())
 
 def main():
-    invoker = Invoker() 
     conexoes = FactoryConexao.criar_conexoes()  
 
-    # Cria o Subject e o Observer
     avaliacao_subject = Subject()
     resultado_observer = ResultadoObserver()
     avaliacao_subject.add_observer(resultado_observer)
