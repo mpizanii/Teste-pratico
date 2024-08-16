@@ -1,0 +1,5 @@
+#Adicionar a chave de acesso da api do ChatGPT:
+gpt_key = "your-gpt-api-key"
+
+#Adicionar a chave de acesso da api do Gemini:
+gemini_key = "your-gemini-api-key"

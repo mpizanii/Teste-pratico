@@ -2,6 +2,7 @@ from abc import ABC,abstractmethod
 import google.generativeai as genai
 import openai
 import openai.error
+from senhas import *
 
 class ConexaoLLM(ABC):
     @abstractmethod
@@ -10,7 +11,7 @@ class ConexaoLLM(ABC):
 
 class ConexaoGPT(ConexaoLLM):
     def conexao(self, prompt: str) -> str:
-        chave = "sk-9L3buGIZUnFGRh0uBdS5sxCtIsVUgAaScopiH4k7pHT3BlbkFJv6Ugtf0Wwc5pHeWE566si9JxYKwEOk7UZMpkr"
+        chave = gpt_key
         openai.api_key = chave 
         messages = [  # Criando uma memória das últimas mensagens
             {"role": "system", "content": "Você é um ótimo assistente."},  # Define o comportamento do modelo, no caso, educado
@@ -38,7 +39,7 @@ class ConexaoGPT(ConexaoLLM):
 
 class ConexaoGemini(ConexaoLLM):
     def conexao(self, prompt: str) -> str:
-        API_KEY = 'AIzaSyDkG7n0T6oal2EKmIM3h_LkKQbklpbYyBs' 
+        API_KEY = gemini_key
         genai.configure(api_key=API_KEY)
         try:
             model = genai.GenerativeModel("gemini-pro")
