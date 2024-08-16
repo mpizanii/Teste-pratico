@@ -5,71 +5,57 @@ import openai.error
 
 class ConexaoLLM(ABC):
     @abstractmethod
-    def conexao(self) -> str:
+    def conexao(self, prompt: str) -> str:
         pass
 
 class ConexaoGPT(ConexaoLLM):
-    def conexao(self) -> str:
-        chave = input("Cole aqui a sua chave de acesso da api do ChatGPT:") 
+    def conexao(self, prompt: str) -> str:
+        chave = input("Cole aqui a sua chave de acesso da API do ChatGPT:") 
         openai.api_key = chave 
-        prompt = input('Digite a mensagem:')
-        messages = [ #criando uma memória das ultimas mensagens
-                    {"role": "system", "content": "Você é um ótimo assistente."}, # define o comportamento do modelo, no caso, educado
-                    ]
-        messages.append({"role": "user", "content": prompt}) #adiciona a mensagem solicitada pelo usuario na memoria da IA
-        while prompt.lower() != "fim":
-            try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages = messages,
-                    temperature=0.7,
-                    max_tokens=2048,
-                    n=1,
-                    stop=None
-                )
-                resposta = response["choices"][0]["message"]["content"]
-                messages.append({"role": "assistant", "content": resposta}) #adiciona a resposta a lista de memórias da IA
-                print("Resposta: ", resposta)
-                prompt = input('Digite a mensagem (Digite "fim" para sair):')
-                if prompt.lower() == 'fim': #verifica se a mensagem é "fim", caso verdadeiro, quebra o ciclo
-                    print("Encerrando conexão com o ChatGPT...")
-                    break
-                messages.append({"role": "user", "content": prompt})
-            except openai.error.AuthenticationError:
-                print("[ERRO]: Verifique sua chave de API e tente novamente.")
-                break
-            except openai.error.RateLimitError:
-                print("[ERRO]: Você excedeu sua cota máxima de uso. Verifique sua cota em https://platform.openai.com/account/usage.")
-                break
-            except Exception as e:
-                print(f"[ERRO]: Ocorreu um erro inesperado: {e}")
-                break
+        messages = [  # Criando uma memória das últimas mensagens
+            {"role": "system", "content": "Você é um ótimo assistente."},  # Define o comportamento do modelo, no caso, educado
+            {"role": "user", "content": prompt}  # Adiciona a mensagem solicitada pelo usuário na memória da IA
+        ]
+        
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=messages,
+                temperature=0.7,
+                max_tokens=2048,
+                n=1,
+            )
+            resposta = response["choices"][0]["message"]["content"]
+            messages.append({"role": "assistant", "content": resposta})  # Adiciona a resposta à lista de memórias da IA
+            return resposta
+        except openai.error.AuthenticationError:
+            return "[ERRO]: Verifique sua chave de API e tente novamente."
+        except openai.error.RateLimitError:
+            return "[ERRO]: Você excedeu sua cota máxima de uso. Verifique sua cota em https://platform.openai.com/account/usage."
+        except Exception as e:
+            return f"[ERRO]: Ocorreu um erro inesperado: {e}"
+
 
 class ConexaoGemini(ConexaoLLM):
-    def conexao(self) -> str:
+    def conexao(self, prompt: str) -> str:
         API_KEY = 'AIzaSyDkG7n0T6oal2EKmIM3h_LkKQbklpbYyBs' 
         genai.configure(api_key=API_KEY)
-        while True:
-            try:
-                model = genai.GenerativeModel("gemini-pro")
-                prompt = input('Digite a mensagem que deseja que o gemini responda (Digite "fim" para sair):')
-                if prompt.lower() == "fim":
-                    break
-                response = model.generate_content(prompt)
-                print(response.text)
-            except Exception as e:
-                print(f"[ERRO]: Ocorreu um erro inesperado: {e}")
-                break
+        try:
+            model = genai.GenerativeModel("gemini-pro")
+            response = model.generate_content(prompt) #Cria uma variavel para a reposta do gemini
+            return response.text #Retorna a resposta do gemini
+        except Exception as e:
+            print(f"[ERRO]: Ocorreu um erro inesperado: {e}")
 
-class FactoryConexao: #abre a classe factory
+class FactoryConexao: 
     @staticmethod
-    def criar_conexao(model_name: str) -> ConexaoLLM:
-        if model_name == "gpt-3.5-turbo":
-            return ConexaoGPT() #chama o método gpt
-        elif model_name == "gemini-1.5-flash":
-            return ConexaoGemini() #chama o método gemini
-        else:
-            raise ValueError("Modelo não suportado!") #caso o usuario tente escolher outra IA, que não esteja presente
+    def criar_conexoes() -> dict:
+        conexoes = {
+            "gpt": ConexaoGPT(),  #Cria a conexão com o GPT
+            "gemini": ConexaoGemini()  #Cria a conexão com o gemini
+        }
+        return conexoes
+
         
 
         

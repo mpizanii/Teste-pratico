@@ -1,24 +1,29 @@
 from abc import ABC, abstractmethod
-from factory import FactoryConexao
+from strategy import Avaliador
+from observer import Observer, Subject
 
 class Command(ABC):
     @abstractmethod
     def execute(self):
         pass
 
-class PromptGPT(Command):
-    def __init__(self, conexao_gpt):
-        self.conexao_gpt = conexao_gpt
-
+class Prompt_Modelos(Command):
+    def __init__(self, prompt: str, conexoes: dict, avaliador: Avaliador, subject: Subject):
+        self.prompt = prompt
+        self.conexoes = conexoes
+        self.avaliador = avaliador
+        self.subject = subject
+        
     def execute(self):
-        self.conexao_gpt.conexao()
+        resposta_gpt = self.conexoes["gpt"].conexao(self.prompt)
+        resposta_gemini = self.conexoes["gemini"].conexao(self.prompt)
 
-class PromptGemini(Command):
-    def __init__(self, conexao_gemini):
-        self.conexao_gemini = conexao_gemini
+        resultado = self.avaliador.avaliar(resposta_gpt, resposta_gemini)
+        self.subject.notify_observers(resultado)
 
-    def execute(self):
-        self.conexao_gemini.conexao()
+        print(f"Resposta do GPT: {resposta_gpt}")
+        print(f"Resposta do Gemini: {resposta_gemini}")
+        print(f"Avaliação: {resultado}")
 
 class Invoker:
     def __init__(self):
@@ -33,30 +38,6 @@ class Invoker:
         else:
             print(f"[ERRO]: Comando {name} não encontrado.")
 
-def main():  
-    invoker = Invoker()  # Instancia o Invoker
-    while True:
-        print('Digite "fim" para sair.')
-        escolha1 = input('Digite qual IA deseja usar ("gpt ou gemini"): ')
-        try:
-            if escolha1.lower() == "gpt":
-                conexao = FactoryConexao.criar_conexao("gpt-3.5-turbo")
-                comando = PromptGPT(conexao)
-                invoker.set_command("gpt", comando)
-                invoker.execute_command("gpt")
-            elif escolha1.lower() == "gemini":
-                conexao = FactoryConexao.criar_conexao("gemini-1.5-flash")
-                comando = PromptGemini(conexao)
-                invoker.set_command("gemini", comando)
-                invoker.execute_command("gemini")
-            elif escolha1.lower() == "fim":
-                print("Encerrando conexão...")
-                break
-            else:
-                print("Modelo não suportado!")
-        except ValueError as e:
-            print(f"[ERRO]: {e}")
-            break
-        
-if __name__ == '__main__':
-    main()
+class ResultadoObserver(Observer):
+    def update(self, mensagem: str):
+        print(mensagem)
