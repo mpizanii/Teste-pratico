@@ -10,7 +10,7 @@ class ConexaoLLM(ABC):
 
 class ConexaoGPT(ConexaoLLM):
     def conexao(self, prompt: str) -> str:
-        chave = input("Cole aqui a sua chave de acesso da API do ChatGPT:") 
+        chave = "sk-9L3buGIZUnFGRh0uBdS5sxCtIsVUgAaScopiH4k7pHT3BlbkFJv6Ugtf0Wwc5pHeWE566si9JxYKwEOk7UZMpkr"
         openai.api_key = chave 
         messages = [  # Criando uma memória das últimas mensagens
             {"role": "system", "content": "Você é um ótimo assistente."},  # Define o comportamento do modelo, no caso, educado
