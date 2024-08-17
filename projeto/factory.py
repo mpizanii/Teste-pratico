@@ -1,8 +1,11 @@
+import os
+from dotenv import load_dotenv
 from abc import ABC,abstractmethod
 import google.generativeai as genai
 import openai
 import openai.error
 
+load_dotenv()
 
 class ConexaoLLM(ABC):
     @abstractmethod
@@ -11,7 +14,7 @@ class ConexaoLLM(ABC):
 
 class ConexaoGPT(ConexaoLLM):
     def conexao(self, prompt: str) -> str:
-        chave = gpt_key
+        chave = os.getenv("gpt_key")
         openai.api_key = chave 
         messages = [  
             {"role": "system", "content": "Você é um ótimo assistente."},  
@@ -39,8 +42,8 @@ class ConexaoGPT(ConexaoLLM):
 
 class ConexaoGemini(ConexaoLLM):
     def conexao(self, prompt: str) -> str:
-        API_KEY = gemini_key
-        genai.configure(api_key=API_KEY)
+        chave = os.getenv("gemini_key")
+        genai.configure(api_key=chave)
         try:
             model = genai.GenerativeModel("gemini-pro")
             response = model.generate_content(prompt) 
