@@ -2,7 +2,7 @@ from abc import ABC,abstractmethod
 import google.generativeai as genai
 import openai
 import openai.error
-from senhas import *
+
 
 class ConexaoLLM(ABC):
     @abstractmethod
