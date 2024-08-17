@@ -10,7 +10,7 @@ parametrizar clientes com diferentes solicitações.
 ## Instalação
 ### Pré-Requisitos
 - Python 3.9 ou superior
-- Bibliotecas listadas no arquivo [requeriments.txt](./requirements.txt)
+- Bibliotecas listadas no arquivo [requeriments.txt](./requeriments.txt)
 ### Passos de Instalação
 1. **Clone o repositório:**
    ```bash
