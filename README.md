@@ -41,11 +41,11 @@ parametrizar clientes com diferentes solicitações.
 - Escolha o critério de avaliação (Clareza ou Tamanho)
 - O resultado será mostrado com base na avaliação escolhida
 ## Estrutura do projeto
-- [`factory.py`](./factory.py): Contém a implementação da fábrica de conexões para as APIs do ChatGPT e Gemini.
--  [`command.py`](./command.py): Implementa o padrão Command para encapsular a solicitação do usuário.
--  [`strategy.py`](./strategy.py): Contém as estratégias de avaliação das respostas (clareza e tamanho).
--  [`observer.py`](./observer.py): Implementa os padrões Observer e Subject para notificação de resultados.
--  [`main.py`](./main.py): Script principal que integra todas as funcionalidades.
+- `factory.py`: Contém a implementação da fábrica de conexões para as APIs do ChatGPT e Gemini.
+-  `command.py`: Implementa o padrão Command para encapsular a solicitação do usuário.
+-  `strategy.py`: Contém as estratégias de avaliação das respostas (clareza e tamanho).
+-  `observer.py`: Implementa os padrões Observer e Subject para notificação de resultados.
+-  `main.py`: Script principal que integra todas as funcionalidades.
 -  `.env`: Armazena as chaves de API de forma segura (não incluído no repositório).
 ## Contribuições
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
