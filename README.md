@@ -22,8 +22,8 @@ parametrizar clientes com diferentes solicitações.
 
 1. **Clone o repositório:**
    ```bash
-   git clone https://github.com/mpizanii/teste-pratico.git
-   cd teste-pratico
+   git clone https://github.com/mpizanii/Conexao-com-API-de-IAs.git
+   cd Conexao-com-API-de-IAs
    ```
 2. **Crie um ambiente virtual**
    ```bash
